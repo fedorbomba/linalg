@@ -41,4 +41,7 @@ Matrix invert(const Matrix& source);
 // Целая степень матрицы. При отрицательном показателе берётся обратная.
 Matrix power(const Matrix& base, int exponent);
 
+// Решение системы A * x = f методом Гаусса. f - матрица столбец.
+Matrix solve(const Matrix& coefficients, const Matrix& right_side);
+
 }  // namespace linalg

@@ -116,4 +116,26 @@ Matrix power(const Matrix& base, int exponent) {
     return result;
 }
 
+Matrix solve(const Matrix& coefficients, const Matrix& right_side) {
+    if (coefficients.rows() != coefficients.columns()) {
+        throw std::runtime_error("solve: matrix is not square");
+    }
+    if (right_side.rows() != coefficients.rows() || right_side.columns() != 1) {
+        throw std::runtime_error("solve: right side must be a column of the same height");
+    }
+
+    Matrix wide = concatenate(coefficients, right_side);
+    wide.gauss_forward();
+    if (is_singular(wide, coefficients.rows())) {
+        throw std::runtime_error("solve: system has no unique solution");
+    }
+    wide.gauss_backward();
+
+    Matrix solution(coefficients.rows(), 1);
+    for (std::size_t row = 0; row < coefficients.rows(); ++row) {
+        solution(row, 0) = wide(row, coefficients.columns());
+    }
+    return solution;
+}
+
 }  // namespace linalg
