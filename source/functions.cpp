@@ -1,8 +1,25 @@
 #include "linalg/functions.hpp"
 #include "linalg/matrix.hpp"
+
+#include <cmath>
 #include <stdexcept>
 
 namespace linalg {
+
+namespace {
+
+// Матрица уже приведена к ступенчатому виду. Если на диагонали встретился
+// ноль, то строки линейно зависимы и обратной матрицы не существует.
+bool is_singular(const Matrix& echelon, std::size_t size) {
+    for (std::size_t i = 0; i < size; ++i) {
+        if (std::abs(echelon(i, i)) < PIVOT_EPS) {
+            return true;
+        }
+    }
+    return false;
+}
+
+}  // namespace
 
 void swap(Matrix& first, Matrix& second) noexcept {
     first.swap(second);
@@ -37,6 +54,41 @@ Matrix concatenate(const Matrix& left, const Matrix& right) {
         }
         for (std::size_t column = 0; column < right.columns(); ++column) {
             result(row, left.columns() + column) = right(row, column);
+        }
+    }
+    return result;
+}
+
+Matrix invert(const Matrix& source) {
+    if (source.rows() != source.columns()) {
+        throw std::runtime_error("invert: matrix is not square");
+    }
+    const std::size_t size = source.rows();
+    if (size == 0) {
+        throw std::runtime_error("invert: matrix is empty");
+    }
+
+    // Пишем рядом [ исходная матрица | единичная ] и преобразовываем обе части
+    // одинаковыми действиями. Когда слева получится единичная, справа будет
+    // ровно такая же комбинация элементарных преобразований, то есть обратная.
+    Matrix wide(size, 2 * size);
+    for (std::size_t row = 0; row < size; ++row) {
+        for (std::size_t column = 0; column < size; ++column) {
+            wide(row, column) = source(row, column);
+        }
+        wide(row, size + row) = 1.0;
+    }
+
+    wide.gauss_forward();
+    if (is_singular(wide, size)) {
+        throw std::runtime_error("invert: matrix is singular");
+    }
+    wide.gauss_backward();
+
+    Matrix result(size, size);
+    for (std::size_t row = 0; row < size; ++row) {
+        for (std::size_t column = 0; column < size; ++column) {
+            result(row, column) = wide(row, size + column);
         }
     }
     return result;

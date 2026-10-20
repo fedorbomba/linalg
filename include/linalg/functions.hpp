@@ -35,4 +35,7 @@ Matrix transpose(const Matrix& source);
 // Соединение двух матриц с одинаковым числом строк: [left | right].
 Matrix concatenate(const Matrix& left, const Matrix& right);
 
+// Обратная матрица. Бросает std::runtime_error, если матрица вырождена.
+Matrix invert(const Matrix& source);
+
 }  // namespace linalg
