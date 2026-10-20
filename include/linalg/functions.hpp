@@ -6,6 +6,10 @@
 
 namespace linalg {
 
+// --- unary operators ---
+Matrix operator+(const Matrix& source);
+Matrix operator-(const Matrix& source);
+
 // --- element wise operators ---
 Matrix operator+(const Matrix& left, const Matrix& right);
 Matrix operator-(const Matrix& left, const Matrix& right);

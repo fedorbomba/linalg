@@ -33,6 +33,18 @@ Matrix& Matrix::operator*=(double factor) {
     return *this;
 }
 
+// --- unary operators ---
+
+Matrix operator+(const Matrix& source) {
+    return source;
+}
+
+Matrix operator-(const Matrix& source) {
+    Matrix result(source);
+    result *= -1.0;
+    return result;
+}
+
 // --- binary operators ---
 
 Matrix operator+(const Matrix& left, const Matrix& right) {
