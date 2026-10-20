@@ -15,6 +15,7 @@ class Matrix {
 public:
     // --- constructors and assignment ---
     Matrix() noexcept;
+    explicit Matrix(std::size_t rows);
     Matrix(std::size_t rows, std::size_t columns);
     ~Matrix() noexcept;
 

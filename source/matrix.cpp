@@ -6,6 +6,9 @@ namespace linalg {
 
 Matrix::Matrix() noexcept : m_ptr(nullptr), m_rows(0), m_columns(0), m_capacity(0) {}
 
+// Матрица из rows строк и одного столбца.
+Matrix::Matrix(std::size_t rows) : Matrix(rows, 1) {}
+
 Matrix::Matrix(std::size_t rows, std::size_t columns)
     : m_ptr(nullptr), m_rows(rows), m_columns(columns), m_capacity(rows * columns) {
     if (m_capacity != 0) {
