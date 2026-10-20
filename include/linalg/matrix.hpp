@@ -51,6 +51,10 @@ public:
     double& operator()(std::size_t row, std::size_t column);
     const double& operator()(std::size_t row, std::size_t column) const;
 
+    // --- arithmetic assignment ---
+    Matrix& operator+=(const Matrix& other);
+    Matrix& operator-=(const Matrix& other);
+
 private:
     // Доступ без проверки границ. Используется внутри библиотеки,
     // где индексы уже заведомо правильные.

@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(linalg
         source/matrix.cpp
+        source/arithmetic.cpp
 )
 
 # Заголовки лежат в include/linalg, поэтому подключаем саму папку include.
