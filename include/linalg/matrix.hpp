@@ -18,9 +18,11 @@ public:
     explicit Matrix(std::size_t rows);
     Matrix(std::size_t rows, std::size_t columns);
     Matrix(const Matrix& other);
+    Matrix(Matrix&& other) noexcept;
     ~Matrix() noexcept;
 
     Matrix& operator=(const Matrix& other);
+    Matrix& operator=(Matrix&& other) noexcept;
 
     // --- state ---
     bool empty() const noexcept;

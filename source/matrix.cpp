@@ -25,6 +25,17 @@ Matrix::Matrix(const Matrix& other) : Matrix(other.m_rows, other.m_columns) {
     }
 }
 
+Matrix::Matrix(Matrix&& other) noexcept
+    : m_ptr(other.m_ptr),
+      m_rows(other.m_rows),
+      m_columns(other.m_columns),
+      m_capacity(other.m_capacity) {
+    other.m_ptr = nullptr;
+    other.m_rows = 0;
+    other.m_columns = 0;
+    other.m_capacity = 0;
+}
+
 Matrix::~Matrix() noexcept {
     destroy();
 }
@@ -43,6 +54,21 @@ Matrix& Matrix::operator=(const Matrix& other) {
     m_columns = other.m_columns;
     for (std::size_t i = 0; i < size(); ++i) {
         m_ptr[i] = other.m_ptr[i];
+    }
+    return *this;
+}
+
+Matrix& Matrix::operator=(Matrix&& other) noexcept {
+    if (this != &other) {
+        destroy();
+        m_ptr = other.m_ptr;
+        m_rows = other.m_rows;
+        m_columns = other.m_columns;
+        m_capacity = other.m_capacity;
+        other.m_ptr = nullptr;
+        other.m_rows = 0;
+        other.m_columns = 0;
+        other.m_capacity = 0;
     }
     return *this;
 }
