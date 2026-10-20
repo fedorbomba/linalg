@@ -1,5 +1,6 @@
 #include "linalg/functions.hpp"
 #include "linalg/matrix.hpp"
+#include <stdexcept>
 
 namespace linalg {
 
@@ -20,6 +21,22 @@ Matrix transpose(const Matrix& source) {
     for (std::size_t row = 0; row < source.rows(); ++row) {
         for (std::size_t column = 0; column < source.columns(); ++column) {
             result(column, row) = source(row, column);
+        }
+    }
+    return result;
+}
+
+Matrix concatenate(const Matrix& left, const Matrix& right) {
+    if (left.rows() != right.rows()) {
+        throw std::runtime_error("concatenate: matrices have different row counts");
+    }
+    Matrix result(left.rows(), left.columns() + right.columns());
+    for (std::size_t row = 0; row < left.rows(); ++row) {
+        for (std::size_t column = 0; column < left.columns(); ++column) {
+            result(row, column) = left(row, column);
+        }
+        for (std::size_t column = 0; column < right.columns(); ++column) {
+            result(row, left.columns() + column) = right(row, column);
         }
     }
     return result;

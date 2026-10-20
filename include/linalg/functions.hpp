@@ -32,4 +32,7 @@ Matrix identity(std::size_t n);
 // Транспонирование.
 Matrix transpose(const Matrix& source);
 
+// Соединение двух матриц с одинаковым числом строк: [left | right].
+Matrix concatenate(const Matrix& left, const Matrix& right);
+
 }  // namespace linalg
