@@ -26,6 +26,13 @@ Matrix& Matrix::operator-=(const Matrix& other) {
     return *this;
 }
 
+Matrix& Matrix::operator*=(double factor) {
+    for (std::size_t i = 0; i < size(); ++i) {
+        m_ptr[i] *= factor;
+    }
+    return *this;
+}
+
 // --- binary operators ---
 
 Matrix operator+(const Matrix& left, const Matrix& right) {
@@ -38,6 +45,16 @@ Matrix operator-(const Matrix& left, const Matrix& right) {
     Matrix result(left);
     result -= right;
     return result;
+}
+
+Matrix operator*(double factor, const Matrix& source) {
+    Matrix result(source);
+    result *= factor;
+    return result;
+}
+
+Matrix operator*(const Matrix& source, double factor) {
+    return factor * source;
 }
 
 }  // namespace linalg

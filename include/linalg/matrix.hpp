@@ -54,6 +54,7 @@ public:
     // --- arithmetic assignment ---
     Matrix& operator+=(const Matrix& other);
     Matrix& operator-=(const Matrix& other);
+    Matrix& operator*=(double factor);
 
 private:
     // Доступ без проверки границ. Используется внутри библиотеки,
