@@ -38,4 +38,7 @@ Matrix concatenate(const Matrix& left, const Matrix& right);
 // Обратная матрица. Бросает std::runtime_error, если матрица вырождена.
 Matrix invert(const Matrix& source);
 
+// Целая степень матрицы. При отрицательном показателе берётся обратная.
+Matrix power(const Matrix& base, int exponent);
+
 }  // namespace linalg

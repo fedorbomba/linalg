@@ -94,4 +94,26 @@ Matrix invert(const Matrix& source) {
     return result;
 }
 
+Matrix power(const Matrix& base, int exponent) {
+    if (base.rows() != base.columns()) {
+        throw std::runtime_error("power: matrix is not square");
+    }
+    Matrix factor = base;
+    if (exponent < 0) {
+        factor = invert(base);
+        exponent = -exponent;
+    }
+    // Обычное возведение в степень умножением: 4 = 100b, поэтому
+    // A^4 = ((A^2)^2), а не A*A*A*A.
+    Matrix result = identity(base.rows());
+    while (exponent > 0) {
+        if (exponent % 2 == 1) {
+            result = result * factor;
+        }
+        factor = factor * factor;
+        exponent /= 2;
+    }
+    return result;
+}
+
 }  // namespace linalg
