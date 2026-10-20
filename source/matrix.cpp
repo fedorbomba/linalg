@@ -95,6 +95,22 @@ std::size_t Matrix::size() const noexcept {
     return m_rows * m_columns;
 }
 
+double* Matrix::begin() noexcept {
+    return m_ptr;
+}
+
+double* Matrix::end() noexcept {
+    return m_ptr + size();
+}
+
+const double* Matrix::begin() const noexcept {
+    return m_ptr;
+}
+
+const double* Matrix::end() const noexcept {
+    return m_ptr + size();
+}
+
 // --- size and capacity ---
 
 void Matrix::reshape(std::size_t rows, std::size_t columns) {
