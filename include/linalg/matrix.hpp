@@ -15,11 +15,19 @@ class Matrix {
 public:
     // --- constructors and assignment ---
     Matrix() noexcept;
+    Matrix(std::size_t rows, std::size_t columns);
     ~Matrix() noexcept;
+
+    // --- state ---
+    bool empty() const noexcept;
+    std::size_t rows() const noexcept;
+    std::size_t columns() const noexcept;
+    std::size_t size() const noexcept;
 
 private:
 
     void destroy() noexcept;
+    void fill_zero();
 
     double* m_ptr;
     std::size_t m_rows;
