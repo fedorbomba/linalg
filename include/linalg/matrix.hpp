@@ -63,6 +63,7 @@ public:
 
     // --- calculations ---
     double norm() const;
+    double trace() const;
 
 private:
     // Доступ без проверки границ. Используется внутри библиотеки,
