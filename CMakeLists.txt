@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(linalg
         source/matrix.cpp
         source/arithmetic.cpp
+        source/gauss.cpp
         source/print.cpp
 )
 

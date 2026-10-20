@@ -61,6 +61,9 @@ public:
     Matrix& operator*=(const Matrix& other);
     Matrix& operator*=(double factor);
 
+    // --- calculations ---
+    double norm() const;
+
 private:
     // Доступ без проверки границ. Используется внутри библиотеки,
     // где индексы уже заведомо правильные.
