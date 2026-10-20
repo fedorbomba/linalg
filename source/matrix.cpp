@@ -5,6 +5,25 @@
 
 namespace linalg {
 
+namespace {
+
+// Длина строки в списке вида { {1, 2}, {3, 4} }.
+// Все строки должны быть одной длины, иначе матрицы не получится.
+std::size_t row_width(std::initializer_list<std::initializer_list<double>> values) {
+    if (values.size() == 0) {
+        return 0;
+    }
+    const std::size_t width = values.begin()->size();
+    for (const auto& row : values) {
+        if (row.size() != width) {
+            throw std::runtime_error("Matrix: rows have different sizes");
+        }
+    }
+    return width;
+}
+
+}  // namespace
+
 // --- constructors ---
 
 Matrix::Matrix() noexcept : m_ptr(nullptr), m_rows(0), m_columns(0), m_capacity(0) {}
@@ -35,6 +54,27 @@ Matrix::Matrix(Matrix&& other) noexcept
     other.m_rows = 0;
     other.m_columns = 0;
     other.m_capacity = 0;
+}
+
+// Плоский список { 1, 2, 3 } - это матрица столбец, по одному числу в строке.
+Matrix::Matrix(std::initializer_list<double> values) : Matrix(values.size(), 1) {
+    std::size_t index = 0;
+    for (double value : values) {
+        m_ptr[index] = value;
+        ++index;
+    }
+}
+
+// Список строк { {1, 2}, {3, 4} } - обычная матрица.
+Matrix::Matrix(std::initializer_list<std::initializer_list<double>> values)
+    : Matrix(values.size(), row_width(values)) {
+    std::size_t index = 0;
+    for (const auto& row : values) {
+        for (double value : row) {
+            m_ptr[index] = value;
+            ++index;
+        }
+    }
 }
 
 Matrix::~Matrix() noexcept {
@@ -72,6 +112,14 @@ Matrix& Matrix::operator=(Matrix&& other) noexcept {
         other.m_capacity = 0;
     }
     return *this;
+}
+
+Matrix& Matrix::operator=(std::initializer_list<double> values) {
+    return *this = Matrix(values);
+}
+
+Matrix& Matrix::operator=(std::initializer_list<std::initializer_list<double>> values) {
+    return *this = Matrix(values);
 }
 
 // --- state ---

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <initializer_list>
 
 namespace linalg {
 
@@ -19,10 +20,14 @@ public:
     Matrix(std::size_t rows, std::size_t columns);
     Matrix(const Matrix& other);
     Matrix(Matrix&& other) noexcept;
+    Matrix(std::initializer_list<double> values);
+    Matrix(std::initializer_list<std::initializer_list<double>> values);
     ~Matrix() noexcept;
 
     Matrix& operator=(const Matrix& other);
     Matrix& operator=(Matrix&& other) noexcept;
+    Matrix& operator=(std::initializer_list<double> values);
+    Matrix& operator=(std::initializer_list<std::initializer_list<double>> values);
 
     // --- state ---
     bool empty() const noexcept;
