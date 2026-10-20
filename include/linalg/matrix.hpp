@@ -68,6 +68,7 @@ public:
     double norm() const;
     double trace() const;
     Matrix& gauss_forward();
+    Matrix& gauss_backward();
 
 private:
     // Доступ без проверки границ. Используется внутри библиотеки,

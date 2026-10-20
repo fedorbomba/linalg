@@ -67,6 +67,28 @@ Matrix& Matrix::gauss_forward() {
     return *this;
 }
 
+Matrix& Matrix::gauss_backward() {
+    std::size_t pivot_row = 0;
+    for (std::size_t column = 0; column < m_columns && pivot_row < m_rows; ++column) {
+        if (is_zero(element(pivot_row, column))) {
+            continue;  // в этой строке ведущий элемент стоит правее
+        }
+        const double pivot = element(pivot_row, column);
+        for (std::size_t row = 0; row < m_rows; ++row) {
+            if (row == pivot_row || is_zero(element(row, column))) {
+                continue;
+            }
+            subtract_row(row, pivot_row, element(row, column) / pivot);
+            element(row, column) = 0.0;
+        }
+        for (std::size_t column_of_pivot = 0; column_of_pivot < m_columns; ++column_of_pivot) {
+            element(pivot_row, column_of_pivot) /= pivot;
+        }
+        ++pivot_row;
+    }
+    return *this;
+}
+
 double Matrix::norm() const {
     double sum = 0.0;
     for (std::size_t i = 0; i < size(); ++i) {
