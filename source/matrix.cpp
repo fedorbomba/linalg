@@ -1,6 +1,7 @@
 #include "linalg/matrix.hpp"
 
 #include <algorithm>
+#include <stdexcept>
 
 namespace linalg {
 
@@ -137,6 +138,20 @@ void Matrix::shrink_to_fit() {
     if (m_capacity != size()) {
         reallocate(size());
     }
+}
+
+double& Matrix::operator()(std::size_t row, std::size_t column) {
+    if (row >= m_rows || column >= m_columns) {
+        throw std::out_of_range("Matrix: index out of range");
+    }
+    return element(row, column);
+}
+
+const double& Matrix::operator()(std::size_t row, std::size_t column) const {
+    if (row >= m_rows || column >= m_columns) {
+        throw std::out_of_range("Matrix: index out of range");
+    }
+    return element(row, column);
 }
 
 // --- private helpers ---

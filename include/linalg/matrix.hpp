@@ -41,7 +41,19 @@ public:
     void clear() noexcept;
     void shrink_to_fit();
 
+    // --- element access, throws std::out_of_range ---
+    double& operator()(std::size_t row, std::size_t column);
+    const double& operator()(std::size_t row, std::size_t column) const;
+
 private:
+    // Доступ без проверки границ. Используется внутри библиотеки,
+    // где индексы уже заведомо правильные.
+    double& element(std::size_t row, std::size_t column) {
+        return m_ptr[row * m_columns + column];
+    }
+    const double& element(std::size_t row, std::size_t column) const {
+        return m_ptr[row * m_columns + column];
+    }
 
     void destroy() noexcept;
     // Выделяет массив на new_capacity элементов и переносит в него старое
