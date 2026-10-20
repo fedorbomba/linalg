@@ -19,8 +19,32 @@ Matrix::Matrix(std::size_t rows, std::size_t columns)
     fill_zero();
 }
 
+Matrix::Matrix(const Matrix& other) : Matrix(other.m_rows, other.m_columns) {
+    for (std::size_t i = 0; i < size(); ++i) {
+        m_ptr[i] = other.m_ptr[i];
+    }
+}
+
 Matrix::~Matrix() noexcept {
     destroy();
+}
+
+// --- assignment ---
+
+Matrix& Matrix::operator=(const Matrix& other) {
+    if (this == &other) {
+        return *this;
+    }
+    // Перевыделяем память только если старого массива не хватает на new размер.
+    if (m_capacity < other.size()) {
+        reallocate(other.size());
+    }
+    m_rows = other.m_rows;
+    m_columns = other.m_columns;
+    for (std::size_t i = 0; i < size(); ++i) {
+        m_ptr[i] = other.m_ptr[i];
+    }
+    return *this;
 }
 
 // --- state ---
