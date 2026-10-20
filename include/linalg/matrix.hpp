@@ -9,6 +9,9 @@ namespace linalg {
 // Точность сравнения вещественных чисел (0.3 * 3 и 0.9 считаются равными).
 const double EPS = 1e-9;
 
+// Элемент меньше этого числа считается нулём при поиске ведущего в Гауссе.
+const double PIVOT_EPS = 1e-12;
+
 // Матрица произвольного размера (размер можно менять во время работы).
 //
 // Все элементы лежат в одном динамическом массиве m_ptr, который идёт
@@ -64,6 +67,7 @@ public:
     // --- calculations ---
     double norm() const;
     double trace() const;
+    Matrix& gauss_forward();
 
 private:
     // Доступ без проверки границ. Используется внутри библиотеки,
@@ -80,6 +84,13 @@ private:
     // содержимое. Старая память освобождается только после удачного new.
     void reallocate(std::size_t new_capacity);
     void fill_zero();
+
+    // Прямой ход: приводит матрицу к ступенчатому виду.
+    // Возвращает количество перестановок строк (нужно для знака определителя).
+    std::size_t make_row_echelon();
+    void swap_rows(std::size_t first, std::size_t second);
+    // Из строки target вычитает factor * строка source.
+    void subtract_row(std::size_t target, std::size_t source, double factor);
 
     double* m_ptr;
     std::size_t m_rows;
