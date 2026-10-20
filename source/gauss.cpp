@@ -124,4 +124,22 @@ double Matrix::det() const {
     return result;
 }
 
+std::size_t Matrix::rank() const {
+    Matrix work(*this);
+    work.make_row_echelon();
+    std::size_t result = 0;
+    for (std::size_t row = 0; row < work.m_rows; ++row) {
+        bool non_zero_row = false;
+        for (std::size_t column = 0; column < work.m_columns; ++column) {
+            if (!is_zero(work.element(row, column))) {
+                non_zero_row = true;
+            }
+        }
+        if (non_zero_row) {
+            ++result;
+        }
+    }
+    return result;
+}
+
 }  // namespace linalg

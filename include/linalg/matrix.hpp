@@ -68,6 +68,7 @@ public:
     double norm() const;
     double trace() const;
     double det() const;
+    std::size_t rank() const;
     Matrix& gauss_forward();
     Matrix& gauss_backward();
 
