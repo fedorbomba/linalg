@@ -16,4 +16,7 @@ Matrix operator-(const Matrix& left, const Matrix& right);
 Matrix operator*(double factor, const Matrix& source);
 Matrix operator*(const Matrix& source, double factor);
 
+// --- matrix product ---
+Matrix operator*(const Matrix& left, const Matrix& right);
+
 }  // namespace linalg
