@@ -19,4 +19,8 @@ Matrix operator*(const Matrix& source, double factor);
 // --- matrix product ---
 Matrix operator*(const Matrix& left, const Matrix& right);
 
+// --- comparison with EPS accuracy ---
+bool operator==(const Matrix& left, const Matrix& right);
+bool operator!=(const Matrix& left, const Matrix& right);
+
 }  // namespace linalg

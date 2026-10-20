@@ -1,8 +1,22 @@
 #include "linalg/functions.hpp"
 #include "linalg/matrix.hpp"
+
+#include <algorithm>
+#include <cmath>
 #include <stdexcept>
 
 namespace linalg {
+
+namespace {
+
+// Сравнение double всегда делаем с точностью, иначе 0.3 * 3 и 0.9
+// окажутся разными числами.
+bool almost_equal(double left, double right) {
+    const double scale = std::max(1.0, std::max(std::abs(left), std::abs(right)));
+    return std::abs(left - right) <= EPS * scale;
+}
+
+}  // namespace
 
 // --- member operators ---
 
@@ -93,6 +107,26 @@ Matrix operator*(double factor, const Matrix& source) {
 
 Matrix operator*(const Matrix& source, double factor) {
     return factor * source;
+}
+
+// --- comparison ---
+
+bool operator==(const Matrix& left, const Matrix& right) {
+    if (left.rows() != right.rows() || left.columns() != right.columns()) {
+        return false;
+    }
+    for (std::size_t row = 0; row < left.rows(); ++row) {
+        for (std::size_t column = 0; column < left.columns(); ++column) {
+            if (!almost_equal(left(row, column), right(row, column))) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool operator!=(const Matrix& left, const Matrix& right) {
+    return !(left == right);
 }
 
 }  // namespace linalg
