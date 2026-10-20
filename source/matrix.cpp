@@ -95,9 +95,31 @@ std::size_t Matrix::size() const noexcept {
     return m_rows * m_columns;
 }
 
+// --- size and capacity ---
+
+void Matrix::reshape(std::size_t rows, std::size_t columns) {
+    if (rows * columns > m_capacity) {
+        reallocate(rows * columns);
+    }
+    m_rows = rows;
+    m_columns = columns;
+    fill_zero();
+}
+
 void Matrix::reserve(std::size_t new_capacity) {
     if (new_capacity > m_capacity) {
         reallocate(new_capacity);
+    }
+}
+
+void Matrix::clear() noexcept {
+    m_rows = 0;
+    m_columns = 0;
+}
+
+void Matrix::shrink_to_fit() {
+    if (m_capacity != size()) {
+        reallocate(size());
     }
 }
 

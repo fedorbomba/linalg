@@ -30,7 +30,12 @@ public:
     std::size_t columns() const noexcept;
     std::size_t capacity() const noexcept;
     std::size_t size() const noexcept;
+
+    // --- size and capacity ---
+    void reshape(std::size_t rows, std::size_t columns);
     void reserve(std::size_t new_capacity);
+    void clear() noexcept;
+    void shrink_to_fit();
 
 private:
 
