@@ -1,5 +1,7 @@
 #include "linalg/matrix.hpp"
 
+#include <algorithm>
+
 namespace linalg {
 
 // --- constructors ---
@@ -35,8 +37,18 @@ std::size_t Matrix::columns() const noexcept {
     return m_columns;
 }
 
+std::size_t Matrix::capacity() const noexcept {
+    return m_capacity;
+}
+
 std::size_t Matrix::size() const noexcept {
     return m_rows * m_columns;
+}
+
+void Matrix::reserve(std::size_t new_capacity) {
+    if (new_capacity > m_capacity) {
+        reallocate(new_capacity);
+    }
 }
 
 // --- private helpers ---
@@ -47,6 +59,20 @@ void Matrix::destroy() noexcept {
     m_rows = 0;
     m_columns = 0;
     m_capacity = 0;
+}
+
+void Matrix::reallocate(std::size_t new_capacity) {
+    double* data = nullptr;
+    if (new_capacity != 0) {
+        data = new double[new_capacity];
+        const std::size_t copy_count = std::min(size(), new_capacity);
+        for (std::size_t i = 0; i < copy_count; ++i) {
+            data[i] = m_ptr[i];
+        }
+    }
+    delete[] m_ptr;
+    m_ptr = data;
+    m_capacity = new_capacity;
 }
 
 void Matrix::fill_zero() {

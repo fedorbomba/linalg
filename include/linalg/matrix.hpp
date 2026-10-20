@@ -23,11 +23,16 @@ public:
     bool empty() const noexcept;
     std::size_t rows() const noexcept;
     std::size_t columns() const noexcept;
+    std::size_t capacity() const noexcept;
     std::size_t size() const noexcept;
+    void reserve(std::size_t new_capacity);
 
 private:
 
     void destroy() noexcept;
+    // Выделяет массив на new_capacity элементов и переносит в него старое
+    // содержимое. Старая память освобождается только после удачного new.
+    void reallocate(std::size_t new_capacity);
     void fill_zero();
 
     double* m_ptr;
