@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <initializer_list>
+#include <iosfwd>
 
 namespace linalg {
 
@@ -81,5 +82,8 @@ private:
     std::size_t m_columns;
     std::size_t m_capacity;
 };
+
+// Вывод матрицы в поток, элементы выровнены по столбцам.
+std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
 
 }  // namespace linalg
