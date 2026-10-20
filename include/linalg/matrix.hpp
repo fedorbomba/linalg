@@ -45,6 +45,7 @@ public:
     void reserve(std::size_t new_capacity);
     void clear() noexcept;
     void shrink_to_fit();
+    void swap(Matrix& other) noexcept;
 
     // --- element access, throws std::out_of_range ---
     double& operator()(std::size_t row, std::size_t column);

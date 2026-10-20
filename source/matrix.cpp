@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 
 namespace linalg {
 
@@ -186,6 +187,13 @@ void Matrix::shrink_to_fit() {
     if (m_capacity != size()) {
         reallocate(size());
     }
+}
+
+void Matrix::swap(Matrix& other) noexcept {
+    std::swap(m_ptr, other.m_ptr);
+    std::swap(m_rows, other.m_rows);
+    std::swap(m_columns, other.m_columns);
+    std::swap(m_capacity, other.m_capacity);
 }
 
 double& Matrix::operator()(std::size_t row, std::size_t column) {
