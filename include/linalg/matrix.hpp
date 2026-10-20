@@ -67,6 +67,7 @@ public:
     // --- calculations ---
     double norm() const;
     double trace() const;
+    double det() const;
     Matrix& gauss_forward();
     Matrix& gauss_backward();
 

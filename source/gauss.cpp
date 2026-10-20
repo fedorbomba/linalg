@@ -108,4 +108,20 @@ double Matrix::trace() const {
     return sum;
 }
 
+double Matrix::det() const {
+    if (m_rows != m_columns) {
+        throw std::runtime_error("det: matrix is not square");
+    }
+    if (m_rows == 0) {
+        return 1.0;  // определитель пустой матрицы по соглашению равен 1
+    }
+    Matrix work(*this);
+    const std::size_t swaps = work.make_row_echelon();
+    double result = (swaps % 2 == 0) ? 1.0 : -1.0;
+    for (std::size_t i = 0; i < m_rows; ++i) {
+        result *= work.element(i, i);
+    }
+    return result;
+}
+
 }  // namespace linalg
