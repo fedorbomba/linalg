@@ -23,4 +23,13 @@ Matrix operator*(const Matrix& left, const Matrix& right);
 bool operator==(const Matrix& left, const Matrix& right);
 bool operator!=(const Matrix& left, const Matrix& right);
 
+// --- global functions ---
+void swap(Matrix& first, Matrix& second) noexcept;
+
+// Единичная матрица размера n x n.
+Matrix identity(std::size_t n);
+
+// Транспонирование.
+Matrix transpose(const Matrix& source);
+
 }  // namespace linalg

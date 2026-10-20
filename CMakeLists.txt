@@ -8,6 +8,7 @@ add_library(linalg
         source/matrix.cpp
         source/arithmetic.cpp
         source/gauss.cpp
+        source/functions.cpp
         source/print.cpp
 )
 
