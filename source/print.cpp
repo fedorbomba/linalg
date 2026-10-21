@@ -11,6 +11,9 @@ namespace linalg {
 namespace {
 
 std::string to_text(double value) {
+    if (value == 0.0) {
+        value = 0.0;  // деление может дать -0, а печатаем мы просто 0
+    }
     char buffer[32];
     std::snprintf(buffer, sizeof(buffer), "%g", value);
     return std::string(buffer);
