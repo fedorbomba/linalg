@@ -9,8 +9,7 @@ namespace linalg {
 
 namespace {
 
-// Сравнение double всегда делаем с точностью, иначе 0.3 * 3 и 0.9
-// окажутся разными числами.
+// Сравнение double всегда делаем с точностью
 bool almost_equal(double left, double right) {
     const double scale = std::max(1.0, std::max(std::abs(left), std::abs(right)));
     return std::abs(left - right) <= EPS * scale;

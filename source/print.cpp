@@ -10,7 +10,6 @@ namespace linalg {
 
 namespace {
 
-// %g печатает 1.0 как "1", а 2.5 как "2.5" - так матрица выглядит короче.
 std::string to_text(double value) {
     char buffer[32];
     std::snprintf(buffer, sizeof(buffer), "%g", value);
