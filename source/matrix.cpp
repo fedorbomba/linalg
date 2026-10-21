@@ -34,9 +34,14 @@ Matrix::Matrix(std::size_t rows) : Matrix(rows, 1) {}
 
 Matrix::Matrix(std::size_t rows, std::size_t columns)
     : m_ptr(nullptr), m_rows(rows), m_columns(columns), m_capacity(rows * columns) {
-    if (m_capacity != 0) {
-        m_ptr = new double[m_capacity];
+    // Если хотя бы одно измерение равно нулю, элементов нет вообще, поэтому
+    // матрица становится пустой 0 x 0, а не, например, 0 x 5.
+    if (m_capacity == 0) {
+        m_rows = 0;
+        m_columns = 0;
+        return;
     }
+    m_ptr = new double[m_capacity];
     fill_zero();
 }
 
@@ -164,6 +169,11 @@ const double* Matrix::end() const noexcept {
 // --- size and capacity ---
 
 void Matrix::reshape(std::size_t rows, std::size_t columns) {
+    // то же соглашение, что и в конструкторе: нулевое измерение - пустая матрица
+    if (rows * columns == 0) {
+        rows = 0;
+        columns = 0;
+    }
     if (rows * columns > m_capacity) {
         reallocate(rows * columns);
     }
