@@ -41,9 +41,12 @@ std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
         out << '|';
         for (std::size_t column = 0; column < columns; ++column) {
             const int size_of_column = static_cast<int>(width[column]);
-            out << ' ' << std::setw(size_of_column) << text[row * columns + column];
+            out << std::setw(size_of_column) << text[row * columns + column];
+            if (column + 1 < columns) {
+                out << ' ';
+            }
         }
-        out << " |";
+        out << '|';
         if (row + 1 < rows) {
             out << '\n';
         }
