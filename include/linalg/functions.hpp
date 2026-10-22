@@ -26,22 +26,21 @@ bool operator!=(const Matrix& left, const Matrix& right);
 // --- global functions ---
 void swap(Matrix& first, Matrix& second) noexcept;
 
-// Единичная матрица размера n x n.
+// единичная матрица n x n
 Matrix identity(std::size_t n);
 
-// Транспонирование.
 Matrix transpose(const Matrix& source);
 
-// Соединение двух матриц с одинаковым числом строк: [left | right].
+// склеивает по горизонтали [left | right], строк должно быть поровну
 Matrix concatenate(const Matrix& left, const Matrix& right);
 
-// Обратная матрица. Бросает std::runtime_error, если матрица вырождена.
+// обратная матрица; для вырожденной - std::runtime_error
 Matrix invert(const Matrix& source);
 
-// Целая степень матрицы. При отрицательном показателе берётся обратная.
+// целая степень; при отрицательном показателе берётся обратная матрица
 Matrix power(const Matrix& base, int exponent);
 
-// Решение системы A * x = f методом Гаусса. f - матрица столбец.
+// решает систему A * x = f, f - матрица столбец
 Matrix solve(const Matrix& coefficients, const Matrix& right_side);
 
 }  // namespace linalg

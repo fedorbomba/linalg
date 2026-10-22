@@ -8,8 +8,7 @@ namespace linalg {
 
 namespace {
 
-// Длина строки в списке вида { {1, 2}, {3, 4} }.
-// Все строки должны быть одной длины, иначе матрицы не получится.
+// ширина строки в списке {{1, 2}, {3, 4}}; все строки обязаны быть одной длины
 std::size_t row_width(std::initializer_list<std::initializer_list<double>> values) {
     if (values.size() == 0) {
         return 0;
@@ -29,13 +28,13 @@ std::size_t row_width(std::initializer_list<std::initializer_list<double>> value
 
 Matrix::Matrix() noexcept : m_ptr(nullptr), m_rows(0), m_columns(0), m_capacity(0) {}
 
-// Матрица из rows строк и одного столбца.
+// rows строк и один столбец
 Matrix::Matrix(std::size_t rows) : Matrix(rows, 1) {}
 
 Matrix::Matrix(std::size_t rows, std::size_t columns)
     : m_ptr(nullptr), m_rows(rows), m_columns(columns), m_capacity(rows * columns) {
-    // Нулевое число строк с ненулевым числом столбцов описать нельзя, и наоборот:
-    // такое сочетание ломает инвариант класса. Легальна только пустая 0 x 0.
+    // 0 строк и при этом несколько столбцов (или наоборот) быть не может,
+    // легальна только пустая 0 x 0
     if (m_capacity == 0 && rows != columns) {
         throw std::runtime_error("Matrix: a zero size is only allowed for an empty matrix");
     }
@@ -63,8 +62,8 @@ Matrix::Matrix(Matrix&& other) noexcept
     other.m_capacity = 0;
 }
 
-// Плоский список { 1, 2, 3 } - это матрица столбец, по одному числу в строке.
-// Пустой список - это пустая матрица, а не 0 строк и 1 столбец.
+// плоский список { 1, 2, 3 } - это столбец, по одному числу в строке;
+// пустой список - пустая матрица, а не 0 x 1
 Matrix::Matrix(std::initializer_list<double> values)
     : Matrix(values.size(), values.size() == 0 ? 0 : 1) {
     std::size_t index = 0;
@@ -74,7 +73,7 @@ Matrix::Matrix(std::initializer_list<double> values)
     }
 }
 
-// Список строк { {1, 2}, {3, 4} } - обычная матрица.
+// список строк {{1, 2}, {3, 4}} - обычный способ задать матрицу
 Matrix::Matrix(std::initializer_list<std::initializer_list<double>> values)
     : Matrix(values.size(), row_width(values)) {
     std::size_t index = 0;
@@ -96,7 +95,7 @@ Matrix& Matrix::operator=(const Matrix& other) {
     if (this == &other) {
         return *this;
     }
-    // Перевыделяем память только если старого массива не хватает на new размер.
+    // перевыделяем, только если старого массива не хватает
     if (m_capacity < other.size()) {
         reallocate(other.size());
     }

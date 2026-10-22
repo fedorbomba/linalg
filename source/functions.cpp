@@ -8,8 +8,7 @@ namespace linalg {
 
 namespace {
 
-// Матрица уже приведена к ступенчатому виду. Если на диагонали встретился
-// ноль, то строки линейно зависимы и обратной матрицы не существует.
+// после прямого хода ноль на диагонали означает зависимые строки
 bool is_singular(const Matrix& echelon, std::size_t size) {
     for (std::size_t i = 0; i < size; ++i) {
         if (std::abs(echelon(i, i)) < PIVOT_EPS) {
@@ -68,9 +67,8 @@ Matrix invert(const Matrix& source) {
         throw std::runtime_error("invert: matrix is empty");
     }
 
-    // Пишем рядом [ исходная матрица | единичная ] и преобразовываем обе части
-    // одинаковыми действиями. Когда слева получится единичная, справа будет
-    // ровно такая же комбинация элементарных преобразований, то есть обратная.
+    // решаем на расширенной матрице [ A | E ]: над обеими частями делаем одни и
+    // те же действия, поэтому когда слева получатся единицы, справа будет обратная
     Matrix wide(size, 2 * size);
     for (std::size_t row = 0; row < size; ++row) {
         for (std::size_t column = 0; column < size; ++column) {
@@ -103,8 +101,7 @@ Matrix power(const Matrix& base, int exponent) {
         factor = invert(base);
         exponent = -exponent;
     }
-    // Обычное возведение в степень умножением: 4 = 100b, поэтому
-    // A^4 = ((A^2)^2), а не A*A*A*A.
+    // степень бинарным возведением: A^4 = (A^2)^2, а не A*A*A*A
     Matrix result = identity(base.rows());
     while (exponent > 0) {
         if (exponent % 2 == 1) {

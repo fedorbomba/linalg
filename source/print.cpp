@@ -28,8 +28,7 @@ std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
         return out;
     }
 
-    // Сначала превращаем все числа в строки, чтобы узнать ширину
-    // каждого столбца и вывести элементы выровненными.
+    // сначала переводим числа в строки, чтобы понять ширину каждого столбца
     std::vector<std::string> text(rows * columns);
     std::vector<std::size_t> width(columns, 1);
     for (std::size_t row = 0; row < rows; ++row) {

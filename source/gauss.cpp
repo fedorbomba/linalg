@@ -34,8 +34,8 @@ std::size_t Matrix::make_row_echelon() {
     std::size_t swaps = 0;
     std::size_t pivot_row = 0;
     for (std::size_t column = 0; column < m_columns && pivot_row < m_rows; ++column) {
-        // Ищем строку с самым большим по модулю элементом в столбце: делить на
-        // маленький ведущий элемент нельзя, погрешность станет огромной.
+        // берём строку с максимальным по модулю элементом: делить на маленький
+        // ведущий нельзя, погрешность станет огромной
         std::size_t best = pivot_row;
         for (std::size_t row = pivot_row + 1; row < m_rows; ++row) {
             if (std::abs(element(row, column)) > std::abs(element(best, column))) {
@@ -43,7 +43,7 @@ std::size_t Matrix::make_row_echelon() {
             }
         }
         if (is_zero(element(best, column))) {
-            continue;  // весь столбец нулевой, ведущего элемента здесь нет
+            continue;  // нулевой столбец, ведущего тут нет
         }
         swap_rows(pivot_row, best);
         if (best != pivot_row) {
@@ -55,7 +55,7 @@ std::size_t Matrix::make_row_echelon() {
             }
             const double factor = element(row, column) / element(pivot_row, column);
             subtract_row(row, pivot_row, factor);
-            element(row, column) = 0.0;  // обнуляем точно, без погрешности деления
+            element(row, column) = 0.0;  // ставим точный ноль, без погрешности
         }
         ++pivot_row;
     }
@@ -71,7 +71,7 @@ Matrix& Matrix::gauss_backward() {
     std::size_t pivot_row = 0;
     for (std::size_t column = 0; column < m_columns && pivot_row < m_rows; ++column) {
         if (is_zero(element(pivot_row, column))) {
-            continue;  // в этой строке ведущий элемент стоит правее
+            continue;  // ведущий в этой строке стоит правее
         }
         const double pivot = element(pivot_row, column);
         for (std::size_t row = 0; row < m_rows; ++row) {
