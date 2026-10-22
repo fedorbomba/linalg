@@ -90,6 +90,9 @@ Matrix& Matrix::gauss_backward() {
 }
 
 double Matrix::norm() const {
+    if (empty()) {
+        throw std::runtime_error("norm: matrix is empty");
+    }
     double sum = 0.0;
     for (std::size_t i = 0; i < size(); ++i) {
         sum += m_ptr[i] * m_ptr[i];
@@ -98,6 +101,9 @@ double Matrix::norm() const {
 }
 
 double Matrix::trace() const {
+    if (empty()) {
+        throw std::runtime_error("trace: matrix is empty");
+    }
     if (m_rows != m_columns) {
         throw std::runtime_error("trace: matrix is not square");
     }
@@ -109,11 +115,11 @@ double Matrix::trace() const {
 }
 
 double Matrix::det() const {
+    if (empty()) {
+        throw std::runtime_error("det: matrix is empty");
+    }
     if (m_rows != m_columns) {
         throw std::runtime_error("det: matrix is not square");
-    }
-    if (m_rows == 0) {
-        return 1.0;  // определитель пустой матрицы по соглашению равен 1
     }
     Matrix work(*this);
     const std::size_t swaps = work.make_row_echelon();

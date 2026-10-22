@@ -34,11 +34,12 @@ Matrix::Matrix(std::size_t rows) : Matrix(rows, 1) {}
 
 Matrix::Matrix(std::size_t rows, std::size_t columns)
     : m_ptr(nullptr), m_rows(rows), m_columns(columns), m_capacity(rows * columns) {
-    // Если хотя бы одно измерение равно нулю, элементов нет вообще, поэтому
-    // матрица становится пустой 0 x 0, а не, например, 0 x 5.
+    // Нулевое число строк с ненулевым числом столбцов описать нельзя, и наоборот:
+    // такое сочетание ломает инвариант класса. Легальна только пустая 0 x 0.
+    if (m_capacity == 0 && rows != columns) {
+        throw std::runtime_error("Matrix: a zero size is only allowed for an empty matrix");
+    }
     if (m_capacity == 0) {
-        m_rows = 0;
-        m_columns = 0;
         return;
     }
     m_ptr = new double[m_capacity];
@@ -63,7 +64,9 @@ Matrix::Matrix(Matrix&& other) noexcept
 }
 
 // Плоский список { 1, 2, 3 } - это матрица столбец, по одному числу в строке.
-Matrix::Matrix(std::initializer_list<double> values) : Matrix(values.size(), 1) {
+// Пустой список - это пустая матрица, а не 0 строк и 1 столбец.
+Matrix::Matrix(std::initializer_list<double> values)
+    : Matrix(values.size(), values.size() == 0 ? 0 : 1) {
     std::size_t index = 0;
     for (double value : values) {
         m_ptr[index] = value;
@@ -169,10 +172,9 @@ const double* Matrix::end() const noexcept {
 // --- size and capacity ---
 
 void Matrix::reshape(std::size_t rows, std::size_t columns) {
-    // то же соглашение, что и в конструкторе: нулевое измерение - пустая матрица
-    if (rows * columns == 0) {
-        rows = 0;
-        columns = 0;
+    // то же соглашение, что и в конструкторе
+    if (rows * columns == 0 && rows != columns) {
+        throw std::runtime_error("reshape: a zero size is only allowed for an empty matrix");
     }
     if (rows * columns > m_capacity) {
         reallocate(rows * columns);
