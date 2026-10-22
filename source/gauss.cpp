@@ -159,6 +159,13 @@ double Matrix::det() const {
     Matrix work(*this);
     double pivot_product = 1.0;
     const std::size_t swaps = work.make_row_echelon(pivot_product);
+    // ведущий для нулевой строки не делится, поэтому вырожденная матрица
+    // узнаётся по нулю на диагонали после прямого хода
+    for (std::size_t i = 0; i < m_rows; ++i) {
+        if (std::abs(work.element(i, i)) < PIVOT_EPS) {
+            return 0.0;
+        }
+    }
     const double sign = (swaps % 2 == 0) ? 1.0 : -1.0;
     return sign * pivot_product;
 }
