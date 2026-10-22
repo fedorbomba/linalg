@@ -51,15 +51,11 @@ Matrix::Matrix(const Matrix& other) : Matrix(other.m_rows, other.m_columns) {
     }
 }
 
+// перемещение - это обмен ресурсами: сначала мы пустые, потом обмениваемся
+// с other, и он остаётся пустой матрицей без памяти
 Matrix::Matrix(Matrix&& other) noexcept
-    : m_ptr(other.m_ptr),
-      m_rows(other.m_rows),
-      m_columns(other.m_columns),
-      m_capacity(other.m_capacity) {
-    other.m_ptr = nullptr;
-    other.m_rows = 0;
-    other.m_columns = 0;
-    other.m_capacity = 0;
+    : m_ptr(nullptr), m_rows(0), m_columns(0), m_capacity(0) {
+    swap(other);
 }
 
 // плоский список { 1, 2, 3 } - это столбец, по одному числу в строке;
@@ -107,17 +103,12 @@ Matrix& Matrix::operator=(const Matrix& other) {
     return *this;
 }
 
+// присваивание перемещением тоже обмен, без временного объекта: после swap
+// наша старая память лежит в other, и он её же и освобождает
 Matrix& Matrix::operator=(Matrix&& other) noexcept {
     if (this != &other) {
-        destroy();
-        m_ptr = other.m_ptr;
-        m_rows = other.m_rows;
-        m_columns = other.m_columns;
-        m_capacity = other.m_capacity;
-        other.m_ptr = nullptr;
-        other.m_rows = 0;
-        other.m_columns = 0;
-        other.m_capacity = 0;
+        swap(other);
+        other.destroy();
     }
     return *this;
 }
