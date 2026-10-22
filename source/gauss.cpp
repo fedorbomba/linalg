@@ -30,7 +30,30 @@ void Matrix::subtract_row(std::size_t target, std::size_t source, double factor)
     }
 }
 
-std::size_t Matrix::make_row_echelon() {
+bool Matrix::is_row_echelon() const {
+    int previous_column = -1;   // столбец предыдущего ведущего элемента
+    bool seen_zero_row = false;
+    for (std::size_t row = 0; row < m_rows; ++row) {
+        int leading = -1;
+        for (std::size_t column = 0; column < m_columns; ++column) {
+            if (!is_zero(element(row, column))) {
+                leading = static_cast<int>(column);
+                break;
+            }
+        }
+        if (leading == -1) {
+            seen_zero_row = true;   // нулевые строки должны лежать снизу
+            continue;
+        }
+        if (seen_zero_row || leading <= previous_column) {
+            return false;
+        }
+        previous_column = leading;
+    }
+    return true;
+}
+
+std::size_t Matrix::make_row_echelon(double& pivot_product) {
     std::size_t swaps = 0;
     std::size_t pivot_row = 0;
     for (std::size_t column = 0; column < m_columns && pivot_row < m_rows; ++column) {
@@ -49,6 +72,14 @@ std::size_t Matrix::make_row_echelon() {
         if (best != pivot_row) {
             ++swaps;
         }
+        // делим ведущую строку на её ведущий элемент, чтобы на диагонали
+        // осталась единица; множитель сохраняем - без него det не собрать
+        const double pivot = element(pivot_row, column);
+        pivot_product *= pivot;
+        for (std::size_t col = column; col < m_columns; ++col) {
+            element(pivot_row, col) /= pivot;
+        }
+        element(pivot_row, column) = 1.0;
         for (std::size_t row = pivot_row + 1; row < m_rows; ++row) {
             if (is_zero(element(row, column))) {
                 continue;
@@ -63,11 +94,15 @@ std::size_t Matrix::make_row_echelon() {
 }
 
 Matrix& Matrix::gauss_forward() {
-    make_row_echelon();
+    double unused = 1.0;
+    make_row_echelon(unused);
     return *this;
 }
 
 Matrix& Matrix::gauss_backward() {
+    if (!is_row_echelon()) {
+        throw std::runtime_error("gauss_backward: run gauss_forward first");
+    }
     std::size_t pivot_row = 0;
     for (std::size_t column = 0; column < m_columns && pivot_row < m_rows; ++column) {
         if (is_zero(element(pivot_row, column))) {
@@ -122,17 +157,16 @@ double Matrix::det() const {
         throw std::runtime_error("det: matrix is not square");
     }
     Matrix work(*this);
-    const std::size_t swaps = work.make_row_echelon();
-    double result = (swaps % 2 == 0) ? 1.0 : -1.0;
-    for (std::size_t i = 0; i < m_rows; ++i) {
-        result *= work.element(i, i);
-    }
-    return result;
+    double pivot_product = 1.0;
+    const std::size_t swaps = work.make_row_echelon(pivot_product);
+    const double sign = (swaps % 2 == 0) ? 1.0 : -1.0;
+    return sign * pivot_product;
 }
 
 std::size_t Matrix::rank() const {
     Matrix work(*this);
-    work.make_row_echelon();
+    double unused = 1.0;
+    work.make_row_echelon(unused);
     std::size_t result = 0;
     for (std::size_t row = 0; row < work.m_rows; ++row) {
         bool non_zero_row = false;

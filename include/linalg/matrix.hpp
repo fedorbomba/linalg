@@ -84,9 +84,11 @@ private:
     void reallocate(std::size_t new_capacity);
     void fill_zero();
 
-    // прямой ход к ступенчатому виду; возвращает число перестановок строк,
-    // по нему определитель меняет знак
-    std::size_t make_row_echelon();
+    // прямой ход к ступенчатому виду: возвращает число перестановок строк,
+    // а в pivot_product пишет произведение ведущих элементов (нужно det())
+    std::size_t make_row_echelon(double& pivot_product);
+    // стоит ли матрица уже в ступенчатом виде, то есть после прямого хода
+    bool is_row_echelon() const;
     void swap_rows(std::size_t first, std::size_t second);
     // из строки target вычитает factor * строку source
     void subtract_row(std::size_t target, std::size_t source, double factor);

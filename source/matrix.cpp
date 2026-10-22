@@ -175,12 +175,16 @@ void Matrix::reshape(std::size_t rows, std::size_t columns) {
     if (rows * columns == 0 && rows != columns) {
         throw std::runtime_error("reshape: a zero size is only allowed for an empty matrix");
     }
+    const std::size_t old_size = size();
     if (rows * columns > m_capacity) {
         reallocate(rows * columns);
     }
     m_rows = rows;
     m_columns = columns;
-    fill_zero();
+    // что влезало в старый размер - остаётся, обнуляем только хвост
+    for (std::size_t i = old_size; i < size(); ++i) {
+        m_ptr[i] = 0.0;
+    }
 }
 
 void Matrix::reserve(std::size_t new_capacity) {
